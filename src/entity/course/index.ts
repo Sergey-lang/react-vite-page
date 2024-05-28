@@ -1,0 +1,1 @@
+export type { ICourse } from './schema.ts'

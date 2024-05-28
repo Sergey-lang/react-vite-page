@@ -1,0 +1,25 @@
+.course_card {
+  width: 100%;
+  font-size: 18px;
+  border-radius: 18px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+  &__image {
+    border-top-right-radius: 18px;
+    border-top-left-radius: 18px;
+    display: flex;
+    justify-content: center;
+    padding-top: 9px;
+    padding-bottom: 9px;
+
+    img {
+      max-width: 144px;
+      height: auto;
+    }
+  }
+
+  &__name {
+    color: #39414B;
+    padding: 12px 18px 18px 18px;
+  }
+}
