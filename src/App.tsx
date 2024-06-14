@@ -14,7 +14,7 @@ function App() {
     const fetchCategoryList = useCallback(async () => {
         // set loading
         try {
-            const res = await fetch(`${import.meta.env.VITE_BASE_API_URL}/docs/courses.json`)
+            const res = await fetch(`${import.meta.env.MY_BASE_API_URL}/docs/courses.json`)
             if (!res.ok) {
                 throw new Error('Произошла Ошибка');
             }
@@ -42,6 +42,7 @@ function App() {
 
     return (
         <div className="container">
+            <img src="/cat.svg" alt="cat" width={50} height={50}/>
             <div className="main-wrapper">
                 <LeftNav
                     items={CATEGORIES}
