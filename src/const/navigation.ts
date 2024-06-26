@@ -1,4 +1,7 @@
-export type CategoryType = { id: number; title: string };
+export interface CategoryType {
+  readonly id: number;
+  readonly title: string;
+}
 
 export const CATEGORIES: CategoryType[] = [
     {id: 0, title: 'Все темы'},
