@@ -16,10 +16,4 @@ export default defineConfig({
         minify: true,
     },
     envPrefix: 'MY',
-    // ssr: { SSG options
-    //     crittersOptions: {
-    //         preload: 'media',
-    //         script: 'async'
-    //     }
-    // }
 })

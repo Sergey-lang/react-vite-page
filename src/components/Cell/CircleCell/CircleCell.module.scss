@@ -1,0 +1,36 @@
+.box {
+  width: 89px;
+  height: 89px;
+  max-width: 89px;
+  background-color: #f2f2f2;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 57px;
+  flex-grow: 1;
+  top: -5px;
+  color: #4D4D4D;
+  position: relative;
+  z-index: 2;
+}
+
+.boxWrapper {
+  width: 89px;
+  height: 89px;
+  max-width: 89px;
+  background-color: #A6A8AB;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.selected {
+  background-color: #E96FA4;
+  color:white;
+}

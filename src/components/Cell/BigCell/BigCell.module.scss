@@ -1,0 +1,14 @@
+.box {
+  width: 72px;
+  height: 72px;
+  max-width: 72px;
+  background-color: #f2f2f2;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 42px;
+  flex-grow: 1;
+  color: #4D4D4D;
+}
