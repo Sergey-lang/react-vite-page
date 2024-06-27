@@ -1,6 +1,6 @@
 import styles from './CellFields.module.scss'
 import { CSSProperties } from 'react';
-import CellFactory from '@components/Cell/CellFactory.tsx';
+import CellFactory from '../Cell/CellFactory.tsx';
 import { IPrintedObj } from '@components/Controls/Controls.tsx';
 
 interface IProps {

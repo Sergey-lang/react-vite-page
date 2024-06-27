@@ -1,5 +1,5 @@
 import styles from './Controls.module.scss'
-import { CircleCell } from '@components/Cell/CircleCell/CircleCell.tsx';
+import { CircleCell } from '../Cell/CircleCell/CircleCell.tsx';
 import { useEffect, useRef, useState } from 'react';
 
 export interface IPrintedObj {

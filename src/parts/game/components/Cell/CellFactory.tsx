@@ -1,5 +1,5 @@
-import { SmallCell } from '@components/Cell/SmallCell/SmallCell.tsx';
-import { BigCell } from '@components/Cell/BigCell/BigCell.tsx';
+import { SmallCell } from './SmallCell/SmallCell.tsx';
+import { BigCell } from './BigCell/BigCell.tsx';
 
 interface IProps {
     size: 'small' | 'big',

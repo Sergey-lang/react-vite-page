@@ -9,6 +9,7 @@ const Game = () => {
     const [guessedWords, setGuessedWords] = useState<string[]>([]);
     const [currentWord, setCurrentWord] = useState<string>('');
     const [printedWord, setPrintedWord] = useState<IPrintedObj>({});
+    const [isWind, setIsWin] = useState<boolean>(false);
     console.log(currentWord);
     console.log('guessedWords', guessedWords);
 
@@ -17,28 +18,33 @@ const Game = () => {
     }, [level])
 
     const getRandomWordFromArray = useCallback((array: string[]): string | undefined => {
-        if(currentLevelWords === guessedWords) {
-            console.log('NEXT LEVEL!')
-        }
-
         if (array.length === 0) {
             return undefined;
         }
 
-        const randomIndex = Math.floor(Math.random() * array.length - 1);
+        if (currentLevelWords === guessedWords) {
+            console.log('NEXT LEVEL!')
+            setIsWin(true);
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * array.length);
         if (!guessedWords.length) {
+            // start
             setCurrentWord(array[randomIndex]);
             return;
         }
 
         if (!guessedWords.includes(array[randomIndex])) {
-            setCurrentWord(array[randomIndex]);
+            const nextWord = array[randomIndex];
+            // next
+            setCurrentWord(nextWord);
             return;
         }
 
         getRandomWordFromArray(array);
 
-    }, [guessedWords, currentLevelWords])
+    }, [guessedWords, currentLevelWords, setCurrentWord])
 
 
     const updateGuessedWords = (v: string) => {
