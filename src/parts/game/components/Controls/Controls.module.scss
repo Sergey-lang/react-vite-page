@@ -1,11 +1,12 @@
 .controlsWrapper {
-  width: 357px;
+  max-width: 357px;
+  width: 100%;
   height: 371px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  gap: 50px;
+  gap: 55px;
 }
 
 .innerCircle {

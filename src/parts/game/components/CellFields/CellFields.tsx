@@ -1,32 +1,68 @@
 import styles from './CellFields.module.scss'
 import { CSSProperties } from 'react';
 import CellFactory from '../Cell/CellFactory.tsx';
-import { IPrintedObj } from '@components/Controls/Controls.tsx';
+import { IPrintedObj } from '../types';
 
-interface IProps {
+interface IProps <T> {
     cellCount?: number,
     stylesProp?: CSSProperties,
     size: 'small' | 'big';
-    values?: IPrintedObj;
+    values?: T;
+    guessedWords?: string[];
+    isShowValue?: boolean;
 }
 
-const CellFields = ({size, stylesProp, values}: IProps) => {
-    const getSortedWord = () => {
-        if (!values) return
-        const array = [...Object.values(values)];
-        const sorted = array.sort((a, b) => a.order - b.order)
-        return sorted
+const CellFields = <T,> ({size, stylesProp, values, guessedWords, isShowValue}: IProps<T>) => {
+    const getSortedWord = (obj: IPrintedObj): { value: string; order: number }[] => {
+        if (!obj) return []
+        const array = [...Object.values(obj)];
+        const res = array.sort((a, b) => a.order - b.order)
+        return res;
     }
 
-    const word = getSortedWord();
+    const isArray = Array.isArray(values);
+
+    const words = isArray ? values : values ? getSortedWord(values) : [];
+
     return (
-        <div className={`${styles.cellWrapper}`} style={stylesProp}>
-            {word?.map(({value, order}) => {
-                return (
-                    <CellFactory size={size} key={order} value={value}/>
-                )
-            })}
-        </div>
+        <>
+            {!isArray ? (
+                <div className={`${styles.cellWrapper}`} style={stylesProp}>
+                    {words?.map(({value}, idx) => {
+                        const isShowSymbol = isShowValue !== undefined
+                            ? isShowValue
+                            : guessedWords && guessedWords.includes(value);
+                        return <CellFactory size={size} key={idx} value={value} isShowSymbol={isShowSymbol}/>
+                    })}
+                </div>
+            ) : (
+                <>
+                    {words?.map((word) => {
+                        const isShowSymbol = isShowValue !== undefined
+                            ? isShowValue
+                            : guessedWords && guessedWords.includes(word);
+                        const isGuessedWord = guessedWords && guessedWords.includes(word);
+                        return (
+                            <div key={word} className={`${styles.cellWrapper}`} style={stylesProp}>
+                                {word.split('').map((letter, idx) => {
+                                    return (
+                                        <CellFactory
+                                            size={size}
+                                            key={idx}
+                                            isShowSymbol={isShowSymbol}
+                                            isGuessedWord={isGuessedWord}
+                                            value={letter}
+                                        />
+                                    )
+                                })}
+                            </div>
+                        )
+                    })}
+
+                </>
+            )}
+
+        </>
     );
 };
 

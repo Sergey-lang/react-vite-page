@@ -1,3 +1,5 @@
+import styles from './WinScreen.module.scss'
+
 interface IProps {
     level: number;
     nextLevel: () => void;
@@ -5,12 +7,17 @@ interface IProps {
 
 const WinScreen = ({level, nextLevel}: IProps) => {
     return (
-        <div>
-            <h1>Уровень {level} пройден</h1>
-            <h1>Изумительно!</h1>
+        <div className={styles.wrapper}>
             <div>
-                <button type={'button'} onClick={nextLevel}>Уровень {level + 1}</button>
+                <h2>Уровень {level} пройден</h2>
+                <h1>Изумительно!</h1>
             </div>
+            <button
+                type={'button'}
+                onClick={nextLevel}
+            >
+                Уровень {level + 1}
+            </button>
         </div>
     );
 };

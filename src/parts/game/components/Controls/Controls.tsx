@@ -1,158 +1,149 @@
 import styles from './Controls.module.scss'
 import { CircleCell } from '../Cell/CircleCell/CircleCell.tsx';
-import { useEffect, useRef, useState } from 'react';
-
-export interface IPrintedObj {
-    [key: string]: { value: string, order: number };
-}
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+    getFullWordStrFromPrintedValue,
+    getLettersArrFromWord, getRandomWordOrderArr,
+} from '../../urils/utils.ts';
+import { IPrintedObj } from '../types';
 
 interface IProps {
-    value: string;
-    setPrintedWord: (v: IPrintedObj) => void;
-    setGuessedWords: (v: string) => void;
+    buttonsValue: string | undefined;
+    setPrintedWord: (newValue: IPrintedObj) => void;
+    setGuessedWords: (newValue: string) => void;
     printedWord: IPrintedObj;
+    currentLevelWords: string[];
 }
 
-const getWord = (wordObj: IPrintedObj) => {
-    if (!wordObj) return
-    const array = [...Object.values(wordObj)];
-    const sorted = array.sort((a, b) => a.order - b.order)
-    const wordsArr = sorted.map(({value}) => value);
-    return wordsArr.join('');
-}
+const Controls = ({buttonsValue = '', setPrintedWord, setGuessedWords, printedWord, currentLevelWords}: IProps) => {
+    const [currenWordArr, setCurrenWordArr] = useState<string[]>([])
 
-const Controls = ({value = '', setPrintedWord, setGuessedWords, printedWord}: IProps) => {
-    const [values, setValues] = useState<string[]>([])
-    const idRef = useRef(0);
-
-    const ref = useRef<HTMLDivElement | null>(null);
-
-    const shuffleArray = (array: string[]): string[] => {
-        for (let i = array.length - 1; i > 0; i--) {
-            const randomIndex = Math.floor(Math.random() * (i + 1));
-            [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
-        }
-        return array;
-    }
-
-    const getSymbolsFromWord = (srtValue: string): string[] => {
-        const splitWord = srtValue.split('');
-        return shuffleArray(splitWord)
-    }
-
-    const checkWord = (): boolean => {
-        const word = getWord(printedWord);
-        return word === value
-    }
+    const tempIdRefNum = useRef<number>(0);
+    const buttonsContainerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        if (!value) return;
-        setValues(getSymbolsFromWord(value))
-    }, [value])
+        if (!buttonsValue) return;
+        const symbolsArr = getLettersArrFromWord(buttonsValue);
+        const randomWordOrderArr = getRandomWordOrderArr(symbolsArr)
+        setCurrenWordArr(randomWordOrderArr)
+    }, [buttonsValue])
 
-    useEffect(() => {
-        if (!ref.current) return;
+    const dragEnterHandler = (event: any) => {
+        // check limit
+        const element = event.target;
+        const dataId = element.dataset.id;
+        if (!dataId) return;
 
-        // add start value
-        const mousedown = (event: any) => {
-            const initId = idRef.current;
-            const element = event.target;
-            const dataId = element.dataset.id;
-            if (!dataId) return;
-            const uniqId = element.id;
+        const uniqId = element.id;
 
-            setPrintedWord({[uniqId]: {value: dataId, order: initId}});
-        }
-
-
-        const dragstart = (event: any) => {
-            // const initId = idRef.current;
-            // const element = event.target;
-            // const dataId = element.dataset.id;
-            // if (!dataId) return;
-            // const id = element.id;
-            //
-            // setPrintedWord(prev => ({...prev, [id]: {value: dataId, order: initId}}))
-        }
-
-
-        const dragenter = (event: any) => {
-            // check limit
-            const element = event.target;
-            const dataId = element.dataset.id;
-            if (!dataId) return;
-
-            const uniqId = element.id;
-
-            if (printedWord[uniqId]) {
+        if (printedWord[uniqId]) {
+            if (Object.values(printedWord).length === 1) {
                 return;
-            } else {
-                const nextId = idRef.current = idRef.current + 1;
-                setPrintedWord((prev) => ({...prev, [uniqId]: {value: dataId, order: nextId}}))
             }
+            // реализовать логику сброса последнего значения
+
+          /*  const sortedWordSymbols = getSortedWordArrFromPrintedObject(printedWord);
+            const lastSymbol = sortedWordSymbols[sortedWordSymbols.length - 1];
+            const lastSymbolOrder = lastSymbol.order;
+            if (printedWord[uniqId].order === lastSymbolOrder - 1) {
+
+
+                const newObj = {...printedWord}
+                const keys = Object.entries(printedWord);
+                const el = keys.find(([_, el]) => el.order === lastSymbolOrder);
+
+                if (el?.length) {
+                    delete newObj[el[0]];
+
+                    setPrintedWord(newObj)
+                }
+
+            }*/
+        } else {
+            const nextId = tempIdRefNum.current = tempIdRefNum.current + 1;
+            const newSymbol = {value: dataId, order: nextId};
+            setPrintedWord((prev) => ({...prev, [uniqId]: newSymbol}))
         }
+    }
 
+    const mouseUpHandler = () => {
+        tempIdRefNum.current = 0;
+        setPrintedWord({})
+    }
 
-        const dragend = () => {
-            if(checkWord()) {
-                setGuessedWords(value);
-            }
-            idRef.current = 0;
-            setPrintedWord({})
+    const dragEndHandler = useCallback(() => {
+        const word = getFullWordStrFromPrintedValue(printedWord);
+        if (currentLevelWords.includes(word)) {
+            setGuessedWords(word);
+            setPrintedWord({});
         }
+        tempIdRefNum.current = 0;
+        setPrintedWord({});
+    }, [tempIdRefNum, printedWord])
 
+    const mouseDownHandler = useCallback((event: any) => {
+        const initId = tempIdRefNum.current;
+        const element = event.target;
+        const dataId = element.dataset.id;
+        if (!dataId) return;
 
-        ref.current.addEventListener('dragstart', dragstart)
-        ref.current.addEventListener('dragenter', dragenter)
-        ref.current.addEventListener('dragend', dragend)
-        ref.current.addEventListener('mousedown', mousedown)
+        const uniqId = element.id;
+        setPrintedWord({[uniqId]: {value: dataId, order: initId}});
+    }, [tempIdRefNum])
+
+    useEffect(() => {
+        if (!buttonsContainerRef.current) return;
+
+        buttonsContainerRef.current.addEventListener('dragenter', dragEnterHandler)
+        buttonsContainerRef.current.addEventListener('dragend', dragEndHandler)
+        buttonsContainerRef.current.addEventListener('mousedown', mouseDownHandler)
+        buttonsContainerRef.current.addEventListener('mouseup', mouseUpHandler)
 
         return () => {
-            if (ref.current) {
-                ref.current.removeEventListener('mousedown', mousedown);
-                ref.current.removeEventListener('dragstart', dragstart);
-                ref.current.removeEventListener('dragenter', dragenter);
-                ref.current.removeEventListener('dragend', dragend);
+            if (buttonsContainerRef.current) {
+                buttonsContainerRef.current.removeEventListener('mousedown', mouseUpHandler);
+                buttonsContainerRef.current.removeEventListener('mouseup', mouseDownHandler);
+                buttonsContainerRef.current.removeEventListener('dragenter', dragEnterHandler);
+                buttonsContainerRef.current.removeEventListener('dragend', dragEndHandler);
             }
         }
-
-    }, [ref, printedWord, checkWord])
+    }, [mouseDownHandler, dragEndHandler, mouseUpHandler])
 
     return (
-        <div ref={ref}
+        <div ref={buttonsContainerRef}
              className={styles.controlsWrapper}
-             style={values && values.length > 3 ? {justifyContent: 'space-around'} : {justifyContent: 'stretch'}}>
+             style={currenWordArr && currenWordArr.length > 3 ? {justifyContent: 'space-around'} : {justifyContent: 'stretch'}}>
             <span className={styles.innerCircle}/>
             <div className={styles.firstLine}>
                 <CircleCell
                     id={'0'}
-                    value={values[0]}
+                    value={currenWordArr[0]}
                     selected={Boolean(printedWord['0'])}
                 />
             </div>
             <div className={styles.secondLine}>
                 <CircleCell
                     id={'1'}
-                    value={values[1]}
+                    value={currenWordArr[1]}
                     selected={Boolean(printedWord['1'])}
                 />
-                <CircleCell
+                {currenWordArr[2] ? <CircleCell
                     id={'2'}
-                    value={values[2]}
+                    value={currenWordArr[2]}
                     selected={Boolean(printedWord['2'])}
-                />
+                /> : null}
             </div>
-            {values[3]
+            {currenWordArr[3]
                 ? (
                     <div className={styles.thirdLine}>
                         <CircleCell
                             id={'3'}
-                            value={values[3]}
+                            value={currenWordArr[3]}
                             selected={Boolean(printedWord['3'])}
                         />
-                        {values[4] ? <CircleCell
+                        {currenWordArr[4] ? <CircleCell
                             id={'4'}
-                            value={values[4]}
+                            value={currenWordArr[4]}
                             selected={Boolean(printedWord['4'])}
                         /> : null}
                     </div>) : null}

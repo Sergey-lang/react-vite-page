@@ -4,18 +4,32 @@ import { BigCell } from './BigCell/BigCell.tsx';
 interface IProps {
     size: 'small' | 'big',
     value: string;
+    isShowSymbol?: boolean;
+    isGuessedWord?: boolean;
 }
 
-const CellFactory = ({size, value}: IProps) => {
+const CellFactory = ({size, value, isShowSymbol, isGuessedWord}: IProps) => {
     switch (size) {
         case 'small': {
-            return <SmallCell value={value}/>
+            return <SmallCell
+                value={value}
+                isShowSymbol={isShowSymbol}
+                isGuessedWord={isGuessedWord}
+            />
         }
         case 'big': {
-            return <BigCell value={value}/>
+            return <BigCell
+                value={value}
+                isShowSymbol={isShowSymbol}
+                isGuessedWord={isGuessedWord}
+            />
         }
         default: {
-            return <BigCell value={value}/>
+            return <BigCell
+                value={value}
+                isShowSymbol={isShowSymbol}
+                isGuessedWord={isGuessedWord}
+            />
         }
     }
 };

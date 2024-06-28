@@ -1,0 +1,33 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 578px;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 57px;
+
+  h1 {
+    color: white;
+    font-size: 53px;
+  }
+
+  h2 {
+    color: white;
+    font-size: 37px;
+  }
+
+  button {
+    color: white;
+    width: 100%;
+    font-size: 40px;
+    border-radius: 50px;
+    background-color: #65BD65;
+    border: none;
+    font-weight: bold;
+    padding: 30px 20px;
+  }
+
+}
