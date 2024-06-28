@@ -6,16 +6,23 @@ import {
     getLettersArrFromWord, getRandomWordOrderArr,
 } from '../../urils/utils.ts';
 import { IPrintedObj } from '../types';
+import errorSound from '../../sound/zvuk-oshibki-vyibora.wav';
+import rightSound from '../../sound/vyibor-nujnogo-deystviya.mp3';
+import selectSound from '../../sound/schelchok-myishi.wav';
 
 interface IProps {
     buttonsValue: string | undefined;
-    setPrintedWord: (newValue: IPrintedObj) => void;
+    setPrintingWord: (v: IPrintedObj | ((prev: IPrintedObj) => IPrintedObj)) => void;
     setGuessedWords: (newValue: string) => void;
-    printedWord: IPrintedObj;
+    printingWord: IPrintedObj;
     currentLevelWords: string[];
 }
 
-const Controls = ({buttonsValue = '', setPrintedWord, setGuessedWords, printedWord, currentLevelWords}: IProps) => {
+const rightAudio = new Audio(rightSound);
+const errorAudio = new Audio(errorSound);
+const selectAudio = new Audio(selectSound);
+
+const Controls = ({buttonsValue = '', setPrintingWord, setGuessedWords, printingWord, currentLevelWords}: IProps) => {
     const [currenWordArr, setCurrenWordArr] = useState<string[]>([])
 
     const tempIdRefNum = useRef<number>(0);
@@ -31,13 +38,13 @@ const Controls = ({buttonsValue = '', setPrintedWord, setGuessedWords, printedWo
     const dragEnterHandler = (event: any) => {
         // check limit
         const element = event.target;
-        const dataId = element.dataset.id;
+        const dataId: string = element.dataset.id;
         if (!dataId) return;
 
-        const uniqId = element.id;
+        const uniqId: string = element.id;
 
-        if (printedWord[uniqId]) {
-            if (Object.values(printedWord).length === 1) {
+        if (printingWord[uniqId]) {
+            if (Object.values(printingWord).length === 1) {
                 return;
             }
             // реализовать логику сброса последнего значения
@@ -60,26 +67,31 @@ const Controls = ({buttonsValue = '', setPrintedWord, setGuessedWords, printedWo
 
             }*/
         } else {
-            const nextId = tempIdRefNum.current = tempIdRefNum.current + 1;
+            selectAudio.play();
+            const nextId: number = tempIdRefNum.current = tempIdRefNum.current + 1;
             const newSymbol = {value: dataId, order: nextId};
-            setPrintedWord((prev) => ({...prev, [uniqId]: newSymbol}))
+            setPrintingWord((prev) => ({...prev, [uniqId]: newSymbol}));
         }
     }
 
     const mouseUpHandler = () => {
         tempIdRefNum.current = 0;
-        setPrintedWord({})
+        setPrintingWord({})
     }
 
-    const dragEndHandler = useCallback(() => {
-        const word = getFullWordStrFromPrintedValue(printedWord);
+    const dragEndHandler = useCallback( () => {
+        const word = getFullWordStrFromPrintedValue(printingWord);
         if (currentLevelWords.includes(word)) {
+            rightAudio.play();
             setGuessedWords(word);
-            setPrintedWord({});
+            setPrintingWord({});
+            tempIdRefNum.current = 0;
+        } else {
+            tempIdRefNum.current = 0;
+            setPrintingWord({});
+            errorAudio.play()
         }
-        tempIdRefNum.current = 0;
-        setPrintedWord({});
-    }, [tempIdRefNum, printedWord])
+    }, [tempIdRefNum, printingWord])
 
     const mouseDownHandler = useCallback((event: any) => {
         const initId = tempIdRefNum.current;
@@ -88,7 +100,8 @@ const Controls = ({buttonsValue = '', setPrintedWord, setGuessedWords, printedWo
         if (!dataId) return;
 
         const uniqId = element.id;
-        setPrintedWord({[uniqId]: {value: dataId, order: initId}});
+        setPrintingWord({[uniqId]: {value: dataId, order: initId}});
+        selectAudio.play();
     }, [tempIdRefNum])
 
     useEffect(() => {
@@ -118,19 +131,19 @@ const Controls = ({buttonsValue = '', setPrintedWord, setGuessedWords, printedWo
                 <CircleCell
                     id={'0'}
                     value={currenWordArr[0]}
-                    selected={Boolean(printedWord['0'])}
+                    selected={Boolean(printingWord['0'])}
                 />
             </div>
             <div className={styles.secondLine}>
                 <CircleCell
                     id={'1'}
                     value={currenWordArr[1]}
-                    selected={Boolean(printedWord['1'])}
+                    selected={Boolean(printingWord['1'])}
                 />
                 {currenWordArr[2] ? <CircleCell
                     id={'2'}
                     value={currenWordArr[2]}
-                    selected={Boolean(printedWord['2'])}
+                    selected={Boolean(printingWord['2'])}
                 /> : null}
             </div>
             {currenWordArr[3]
@@ -139,12 +152,12 @@ const Controls = ({buttonsValue = '', setPrintedWord, setGuessedWords, printedWo
                         <CircleCell
                             id={'3'}
                             value={currenWordArr[3]}
-                            selected={Boolean(printedWord['3'])}
+                            selected={Boolean(printingWord['3'])}
                         />
                         {currenWordArr[4] ? <CircleCell
                             id={'4'}
                             value={currenWordArr[4]}
-                            selected={Boolean(printedWord['4'])}
+                            selected={Boolean(printingWord['4'])}
                         /> : null}
                     </div>) : null}
         </div>

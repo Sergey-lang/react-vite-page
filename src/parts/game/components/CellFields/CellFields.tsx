@@ -16,8 +16,7 @@ const CellFields = <T,> ({size, stylesProp, values, guessedWords, isShowValue}: 
     const getSortedWord = (obj: IPrintedObj): { value: string; order: number }[] => {
         if (!obj) return []
         const array = [...Object.values(obj)];
-        const res = array.sort((a, b) => a.order - b.order)
-        return res;
+        return array.sort((a, b) => a.order - b.order);
     }
 
     const isArray = Array.isArray(values);
@@ -44,7 +43,7 @@ const CellFields = <T,> ({size, stylesProp, values, guessedWords, isShowValue}: 
                         const isGuessedWord = guessedWords && guessedWords.includes(word);
                         return (
                             <div key={word} className={`${styles.cellWrapper}`} style={stylesProp}>
-                                {word.split('').map((letter, idx) => {
+                                {word.split('').map((letter: string, idx: number) => {
                                     return (
                                         <CellFactory
                                             size={size}
@@ -58,10 +57,8 @@ const CellFields = <T,> ({size, stylesProp, values, guessedWords, isShowValue}: 
                             </div>
                         )
                     })}
-
                 </>
             )}
-
         </>
     );
 };

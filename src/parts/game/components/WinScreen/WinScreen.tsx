@@ -1,22 +1,28 @@
 import styles from './WinScreen.module.scss'
 
 interface IProps {
-    level: number;
-    nextLevel: () => void;
+    level?: number;
+    handler: () => void;
+    btnTitle: string;
 }
 
-const WinScreen = ({level, nextLevel}: IProps) => {
+const WinScreen = ({level, handler, btnTitle}: IProps) => {
     return (
         <div className={styles.wrapper}>
-            <div>
-                <h2>Уровень {level} пройден</h2>
-                <h1>Изумительно!</h1>
-            </div>
+            {
+                level && (
+                    <div>
+                        <h2>Уровень {level} пройден</h2>
+                        <h1>Изумительно!</h1>
+                    </div>
+                )
+            }
             <button
+                aria-label={btnTitle}
                 type={'button'}
-                onClick={nextLevel}
+                onClick={handler}
             >
-                Уровень {level + 1}
+                {btnTitle} {level ? level + 1 : null}
             </button>
         </div>
     );
