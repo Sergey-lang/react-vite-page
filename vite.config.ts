@@ -10,16 +10,11 @@ export default defineConfig({
         alias: {
             '@entity': '/src/entity',
             '@const': '/src/const',
+            '@components': '/src/components',
         }
     },
     build: {
         minify: true,
     },
     envPrefix: 'MY',
-    // ssr: { SSG options
-    //     crittersOptions: {
-    //         preload: 'media',
-    //         script: 'async'
-    //     }
-    // }
 })
