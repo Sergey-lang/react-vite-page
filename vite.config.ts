@@ -11,6 +11,8 @@ export default defineConfig({
             '@entity': '/src/entity',
             '@const': '/src/const',
             '@components': '/src/components',
+            '@shared': '/src/shared',
+            '@pages': '/src/pages',
         }
     },
     build: {

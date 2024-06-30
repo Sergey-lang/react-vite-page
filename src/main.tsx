@@ -8,13 +8,3 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <App/>
     </React.StrictMode>,
 )
-
-// const router: Array<RouteRecordRaw> = [
-//     {
-//         path: '/',
-//         name: 'home',
-//         component: () => import('App.tsx')
-//     }
-// ]
-
-// export const createApp = ViteSSG(App, {routes: router})

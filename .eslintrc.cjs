@@ -7,6 +7,10 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:jest/recommended',
   ],
+  overrides: [{
+    files: ['**/__tests__/**/*.[js]s?(x)', '**/?(*.)+(spec|test).[js]s?(x)'],
+    extends: ['plugin:testing-library/react']
+  }],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh', 'jest'],
