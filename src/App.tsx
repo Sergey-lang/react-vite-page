@@ -7,7 +7,6 @@ import { Pages } from '@pages/index.ts';
 const router = createHistoryRouter({ routes: mappedRoutes });
 
 function App() {
-
     return (
         <RouterProvider router={router}>
             <Pages />
