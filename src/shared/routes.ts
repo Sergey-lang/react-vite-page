@@ -1,18 +1,23 @@
-import { createHistoryRouter, createRoute } from 'atomic-router';
+import { createHistoryRouter, createRoute, createRouterControls } from 'atomic-router';
 import { createBrowserHistory } from 'history';
 
 export const routes = {
-    auth: {
-        home: createRoute(),
+    shared: {
+        books: createRoute(),
+        book: createRoute<{ bookId: number }>(),
     },
 }
 
 export const mappedRoutes = [
-    { path: "/", route: routes.auth.home },
+    { path: "/", route: routes.shared.books },
+    { path: "/books/:bookId", route: routes.shared.book },
 ];
+
+export const controls = createRouterControls();
 
 export const router = createHistoryRouter({
     routes: mappedRoutes,
+    controls,
 });
 
 const history = createBrowserHistory();

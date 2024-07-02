@@ -3,31 +3,3 @@
   margin: 0 auto;
   padding: 24px;
 }
-
-.main-wrapper {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  gap: 24px;
-
-  @media screen and (max-width: 749px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-.courses-block {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-
-  @media screen and (max-width: 903px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media screen and (max-width: 750px) {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}
-

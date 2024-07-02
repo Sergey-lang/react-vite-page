@@ -1,6 +1,7 @@
 import { createRoutesView } from 'atomic-router-react';
-import { HomeRoute } from '@pages/home';
+import { BooksRoute } from '@pages/books';
+import { BookRoute } from '@pages/book';
 
 export const Pages = createRoutesView({
-    routes: [HomeRoute],
+    routes: [BooksRoute, BookRoute],
 });
