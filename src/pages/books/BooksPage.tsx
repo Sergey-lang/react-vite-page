@@ -2,8 +2,9 @@ import { useUnit } from 'effector-react';
 import { $booksFullDataStore, addBook, getBooksListFx } from '@pages/books/model.ts';
 import { IBook } from '@entity/book/types.ts';
 import { Link } from 'atomic-router-react';
-import { routes } from '@shared/routes.ts';
 import { useEffect } from 'react';
+import { tokenExpired, tokenReceived } from '@shared/auth.ts';
+import { routes } from '@shared/routing.ts';
 
 const newTestBook: IBook = {
     title: 'You and I',
@@ -33,6 +34,17 @@ const BooksPage = () => {
 
     return (
         <main>
+            <Link
+                params={{profileId: 2}}
+                to={routes.auth.profile}
+                aria-label="open profile"
+            >
+                Open AUTH PROFILE
+            </Link>
+            <br/>
+            <button onClick={()=> tokenReceived('hello!')}>Make me Auth</button>
+            <button onClick={() => tokenExpired()}>Reset Token</button>
+            <br/>
             <div style={{display: 'flex', gap: '15px'}}>
                 <h2>Books count: {count}</h2>
                 {books?.length > 0 && (
@@ -64,7 +76,8 @@ const BooksPage = () => {
                             display: 'flex',
                             flexDirection: 'column',
                             border: '1px solid silver',
-                            width: '15%'
+                            width: '15%',
+                            padding: '5px'
                         }}>
                             <h3>Title: {b.title}</h3>
                             <h4>Author: {b.author}</h4>
@@ -74,7 +87,10 @@ const BooksPage = () => {
                                     params={{bookId: b.id}}
                                     to={routes.shared.book}
                                     style={{marginLeft: 'auto'}}
-                                    aria-label="open">Open</Link>
+                                    aria-label="open"
+                                >
+                                    Open
+                                </Link>
                             </div>
                         </section>
                     )

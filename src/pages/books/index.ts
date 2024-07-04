@@ -1,7 +1,7 @@
 import BooksPage from '@pages/books/BooksPage.tsx';
-import { routes } from '@shared/routes.ts';
+import { currentRoute } from '@pages/books/model.ts';
 
 export const BooksRoute = {
     view: BooksPage,
-    route: routes.shared.books,
+    route: currentRoute,
 };

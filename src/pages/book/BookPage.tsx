@@ -1,16 +1,16 @@
 import { useUnit } from 'effector-react';
 import { $bookStore, getBookFx } from '@pages/book/model.ts';
-import { routes } from '@shared/routes.ts';
+import { routes } from '@shared/routing.ts';
 import { createApi, createEvent, createStore, sample } from 'effector';
 import { redirect } from 'atomic-router';
 import { Link } from 'atomic-router-react';
 
 const $counter = createStore<number>(0);
+const resetCounter = createEvent();
 
-const {plusCounter, minusCounter, resetCounter} = createApi($counter, {
+const {plusCounter, minusCounter} = createApi($counter, {
     plusCounter: (count) => count + 1,
     minusCounter: (count) => count - 1,
-    resetCounter: () => 0,
 })
 
 const redirectEvent = createEvent<void>();
@@ -19,6 +19,8 @@ redirect({
     clock: redirectEvent,
     route: routes.shared.books,
 });
+
+$counter.reset(resetCounter)
 
 sample({
     source: $counter,

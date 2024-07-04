@@ -1,9 +1,11 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
-import { showErrorMessageFx } from '@shared/notifation.ts';
+import { showErrorMessageFx } from '@shared/notification.ts';
 import { IBook } from '@entity/book/types.ts';
 import { bookAPI } from '@entity/book/api.ts';
 import { chainRoute } from 'atomic-router';
-import { routes } from '@shared/routes.ts';
+import { routes } from '@shared/routing.ts';
+
+export const currentRoute = routes.shared.books;
 
 export const setBooks = createEvent<IBook[]>();
 export const addBook = createEvent<IBook>();
@@ -19,7 +21,7 @@ export const getBooksListFx = createEffect(bookAPI.fetchBooks);
 
 sample({
     clock: getBooksListFx.doneData,
-    fn: (clx) => clx,
+    fn: (clx) => clx ?? [],
     target: setBooks
 })
 
