@@ -46,9 +46,6 @@ export const router = createHistoryRouter({
     controls,
 })
 
-// export const history = createBrowserHistory();
-// router.setHistory(history)
-
 sample({
     clock: appStarted,
     fn: () => createBrowserHistory(),

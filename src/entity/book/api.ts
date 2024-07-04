@@ -12,7 +12,6 @@ export const bookAPI = {
         } catch (e) {
             console.log(e)
         }
-
     },
 
     fetchBook: async (id: number): Promise<IBook | undefined> => {
@@ -23,5 +22,15 @@ export const bookAPI = {
             console.log(e)
         }
 
+    },
+
+    // simple request instead getMe for testing
+    authRequest: async (id: number): Promise<IBook | undefined> => {
+        try {
+            const resp = await fetch(`${BASE_URL}/${API_VERSION}/${ENTITY}/${id}`)
+            return await resp.json();
+        } catch (e) {
+            console.log(e)
+        }
     }
 }
