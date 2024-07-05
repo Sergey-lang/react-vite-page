@@ -1,22 +1,29 @@
-import { createEvent, createStore } from 'effector';
-import { persist } from 'effector-storage/local';
+import { attach, createEffect, createStore } from 'effector';
+import { bookAPI } from '@entity/book/api.ts';
+import { IBook } from '@entity/book/types.ts';
+import { debug } from 'patronum';
+export enum AuthorizationStatus {
+    Init,
+    Pending,
+    Auth,
+    Anon
+}
 
-export const tokenReceived = createEvent<string>();
-export const tokenExpired = createEvent();
-export const $token = createStore('');
-export const $isAuthorized = $token.map(Boolean);
+export const $authStatus = createStore<AuthorizationStatus>(AuthorizationStatus.Init);
+debug($authStatus)
+export const $user = createStore<IBook | null>(null);
 
-$isAuthorized.watch((x) => {
-    console.log(x);
-})
+// instead user
+const getBookFx = createEffect(bookAPI.authRequest);
+export const sessionRequestFx = attach({effect: getBookFx});
+$user.on(sessionRequestFx.doneData, (_, book) => book);
 
-$token
-    .on(tokenReceived, (_, token) => token)
-    .reset(tokenExpired);
-
-persist({
-    key: 'effector-token',
-    store: $token,
-    serialize: (v) => v,
-    deserialize: (v) => v
-})
+// change status during request
+$authStatus.on(sessionRequestFx, (status) => {
+    if (status === AuthorizationStatus.Init) {
+        return AuthorizationStatus.Pending;
+    }
+    return status;
+});
+$authStatus.on(sessionRequestFx.done, () => AuthorizationStatus.Auth);
+$authStatus.on(sessionRequestFx.fail, () => AuthorizationStatus.Anon);

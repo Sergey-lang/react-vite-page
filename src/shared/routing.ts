@@ -1,6 +1,5 @@
 import { createHistoryRouter, createRoute, createRouterControls } from 'atomic-router';
-import { chainAuthorized } from '@shared/authRoute.ts';
-import {createBrowserHistory} from 'history';
+import { createBrowserHistory } from 'history';
 import { sample } from 'effector';
 import { appStarted } from '@shared/config.ts';
 
@@ -10,44 +9,33 @@ export const routes = {
         book: createRoute<{ bookId: number }>(),
     },
     auth: {
-        profile: chainAuthorized(createRoute<{ profileId: number }>()), // protected
+        profile: createRoute(),
         register: createRoute(),
         login: createRoute(),
     }
 }
 
-export const routesMap = [
-    {
-        path: '/',
-        route: routes.shared.books
-    },
-    {
-        path: '/books/:bookId',
-        route: routes.shared.book
-    },
-    {
-        path: '/profile/:profileId',
-        route: routes.auth.profile
-    },
-    {
-        path: '/register',
-        route: routes.auth.register
-    },
-    {
-        path: '/login',
-        route: routes.auth.login
-    },
-]
-
 export const controls = createRouterControls();
-
 export const router = createHistoryRouter({
-    routes: routesMap,
+    routes: [
+        {
+            path: '/',
+            route: routes.shared.books,
+        },
+        {
+            path: '/books/:bookId',
+            route: routes.shared.book,
+        },
+        {
+            path: '/profile',
+            route: routes.auth.profile,
+        },
+    ],
     controls,
 })
 
 sample({
     clock: appStarted,
     fn: () => createBrowserHistory(),
-    target: router.setHistory
+    target: router.setHistory,
 })

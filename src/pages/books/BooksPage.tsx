@@ -3,7 +3,6 @@ import { $booksFullDataStore, addBook, getBooksListFx } from '@pages/books/model
 import { IBook } from '@entity/book/types.ts';
 import { Link } from 'atomic-router-react';
 import { useEffect } from 'react';
-import { tokenExpired, tokenReceived } from '@shared/auth.ts';
 import { routes } from '@shared/routing.ts';
 
 const newTestBook: IBook = {
@@ -42,8 +41,8 @@ const BooksPage = () => {
                 Open AUTH PROFILE
             </Link>
             <br/>
-            <button onClick={()=> tokenReceived('hello!')}>Make me Auth</button>
-            <button onClick={() => tokenExpired()}>Reset Token</button>
+            {/*<button onClick={()=> tokenReceived('hello!')}>Make me Auth</button>*/}
+            {/*<button onClick={() => tokenExpired()}>Reset Token</button>*/}
             <br/>
             <div style={{display: 'flex', gap: '15px'}}>
                 <h2>Books count: {count}</h2>
