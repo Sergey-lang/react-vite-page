@@ -18,7 +18,6 @@ const getBookFx = createEffect(bookAPI.authRequest);
 export const sessionRequestFx = attach({effect: getBookFx});
 $user.on(sessionRequestFx.doneData, (_, book) => book);
 
-// change status during request
 $authStatus.on(sessionRequestFx, (status) => {
     if (status === AuthorizationStatus.Init) {
         return AuthorizationStatus.Pending;
