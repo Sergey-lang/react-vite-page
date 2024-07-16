@@ -1,0 +1,38 @@
+.books-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  @media screen and (max-width: 764px) {
+    flex-direction: column;
+  }
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid silver;
+  border-radius: 6px;
+  width: 200px;
+  //width: min(200px, 10%);
+  padding: 10px 20px;
+  flex-grow: 1;
+
+  @media screen and (max-width: 764px) {
+    width: auto;
+  }
+
+  h3 {
+    font-size: clamp(16px, 0.727rem + 1.36vw, 28px) //https://min-max-calculator.9elements.com/
+  }
+
+  picture {
+    margin-bottom: 10px;
+  }
+
+  picture img {
+    width: 100%;
+    border-radius: 6px;
+  }
+}

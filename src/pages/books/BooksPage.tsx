@@ -4,6 +4,7 @@ import { IBook } from '@entity/book/types.ts';
 import { Link } from 'atomic-router-react';
 import { useEffect } from 'react';
 import { routes } from '@shared/routing.ts';
+import BookCard from '@components/BookCard/BookCard.tsx';
 
 const newTestBook: IBook = {
     title: 'You and I',
@@ -68,30 +69,10 @@ const BooksPage = () => {
             </div>
 
             <br/>
-            <div style={{display: 'flex', flexWrap: 'wrap', gap: '12px'}}>
+            <div className="books-board">
                 {books?.map((b) => {
                     return (
-                        <section key={b.id} style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            border: '1px solid silver',
-                            width: '15%',
-                            padding: '5px'
-                        }}>
-                            <h3>Title: {b.title}</h3>
-                            <h4>Author: {b.author}</h4>
-                            <time>Published: {b.publication_year}</time>
-                            <div style={{width: '100%', display: 'flex'}}>
-                                <Link
-                                    params={{bookId: b.id}}
-                                    to={routes.shared.book}
-                                    style={{marginLeft: 'auto'}}
-                                    aria-label="open"
-                                >
-                                    Open
-                                </Link>
-                            </div>
-                        </section>
+                        <BookCard key={b.id} {...b}/>
                     )
                 })}
             </div>
